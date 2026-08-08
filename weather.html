@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="weather.css">
+</head>
+<body>
+   <main>
+    <header>
+        <h2 id="name" onclick="window.location.href='weather.html'">Weather</h2>
+        <div  id="search-area">
+             
+                <i class="fa-solid fa-location-dot"></i>
+                <input type="text" placeholder="Search for a city..." id="search-box">
+                <i class="fa-solid fa-magnifying-glass" id="search-icon"></i>
+        </div>
+    </header>
+     
+    <section id="hero">
+        <section id="sec-1">
+           <div id="basic-data">
+             <h1 id="location">London,GB</h1>
+             <h3 id="date">Today. 22 May,2025</h3>
+             <img src="https://images.pexels.com/photos/414659/pexels-photo-414659.jpeg"  style="height: 100px; width: 100px;" id="image">
+             <h3 id="abt-weather">overcast clouds</h3>
+             <h3 id="temp">feels like 25&deg; C</h3>
+             <span class="min-max" id="min-temp"><i class="fa-solid fa-temperature-empty" ></i>Min 20&deg; C</span>
+             <span class="min-max" id="max-temp"><i class="fa-solid fa-temperature-full"></i>Max 30&deg C</span>
+           </div>
+            
+           <div id="details">
+            <h3 id="basic">Weather details </h3><hr>
+            <div class="short-data">
+                <h3><i class="fa-solid fa-droplet"></i>  Humidity </h3>
+                <h3 id="humidity">65%</h3>
+            </div><hr>
+            <div class="short-data">
+                <h3><i class="fa-solid fa-wind"></i>  Wind </h3>
+                <h3 id="wind">1.6m/s</h3>
+            </div><hr>
+            <div class="short-data">
+                <h3> <i class="fa-solid fa-compass"></i>  Wind Direction </h3>
+                <h3 id="wind-dir">236&deg; (SW)</h3>
+            </div><hr>
+            <div class="short-data">
+                <h3><i class="fa-solid fa-eye"></i>  Visibility</h3>
+                <h3 id="visibility">10km</h3>
+            </div><hr>
+            <div class="short-data">
+                <h3><i class="fa-solid fa-cloud"></i>  Cloud coverage </h3>
+                <h3 id="cloud-cov">98%</h3>
+            </div><hr>
+            <div class="short-data">
+                <h3><i class="fa-solid fa-gauge-high"></i>  Pressure </h3>
+                <h3 id="pressure">1002hPa</h3>
+            </div>
+        
+           </div>
+        </section>
+        
+        <section id="sec-2">
+            <div class="rise-set" id="sunrise-box">
+                <h2><i class="fa-solid fa-sun"></i>  Sunrise</h2>
+                <h1 id="sunrise">5:47 AM</h1>
+            </div>
+            <div class="rise-set" id="sunset-box">
+                <h2><i class="fa-solid fa-cloud-sun"></i>  Sunset</h2>
+                <h1 id="sunset">6:55 pM</h1>
+            </div>
+        </section>
+
+    </section>
+
+   </main>
+
+
+    <script>
+        
+        const searchBox = document.getElementById("search-box");
+        const searchIcon = document.getElementById("search-icon");
+         
+        searchIcon.addEventListener("click",()=>{
+            let val = searchBox.value.trim();
+            getWeather(val);
+        })
+
+        searchBox.addEventListener("keypress", (e) => {
+           if (e.key === "Enter") {
+           searchIcon.click();
+           }
+        });
+
+         
+    async function getWeather(location){
+
+
+      let url =  `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=f1241a4b7a97420d3db8dfb9818ad0c4&units=metric`
+      try{
+        let response = await fetch(url)
+        let data = await response.json()
+        if (data.cod != 200) {
+           alert("❌ City not found!");
+           return;
+        }
+          
+
+        document.getElementById("location").innerHTML =`${data.name}, ${data.sys.country}`;
+
+        document.getElementById("abt-weather").innerHTML =`${data.weather[0].description}`;
+         
+        document.getElementById("temp").innerHTML =`Feels Like ${Math.round(data.main.feels_like)}°C`;
+
+        document.getElementById("min-temp").innerHTML =`<i class="fa-solid fa-temperature-empty"></i> Min ${Math.round(data.main.temp_min)}°C`;
+        
+        document.getElementById("max-temp").innerHTML =`<i class="fa-solid fa-temperature-full"></i> Max ${Math.round(data.main.temp_max)}°C`;
+
+        document.getElementById("humidity").innerHTML =data.main.humidity + "%";
+ 
+        document.getElementById("wind").innerHTML =data.wind.speed + " m/s";
+
+        document.getElementById("wind-dir").innerHTML =data.wind.deg + "°";
+ 
+        document.getElementById("visibility").innerHTML =(data.visibility/1000) + " km";
+ 
+        document.getElementById("cloud-cov").innerHTML =data.clouds.all + "%";
+ 
+        document.getElementById("pressure").innerHTML =data.main.pressure + " hPa";
+ 
+        const sunrise = new Date(data.sys.sunrise * 1000);
+        document.getElementById("sunrise").innerHTML = sunrise.toLocaleTimeString();
+
+     
+        const sunset = new Date(data.sys.sunset * 1000);
+        document.getElementById("sunset").innerHTML =sunset.toLocaleTimeString();
+ 
+        document.getElementById("image").src =`https://openweathermap.org/img/wn/${data.weather[0].icon}@4x.png`;
+
+    }
+
+    catch(error){
+        console.log("Error Fetching : " , error)
+    }
+
+    }
+    getWeather("london") 
+  </script>
+</body>
+</html>

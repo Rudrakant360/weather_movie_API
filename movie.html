@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet"href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+ <link rel="stylesheet" href="movie.css">
+ 
+</head>
+<body id="main-body">
+  <header id="nav" >
+    <h1  id="heading" onclick="window.location.href='movie.html'" >🍿Movie<span style="color: REd;">Search</span></h1>
+  </header>
+  <main id="hero">
+      <h1 id="movie">Find Your Next <br><span style="color: red;">Favourite</span> Movie</h1>
+
+      <p id="content">Search thousand of movies. Discover. Explore. Enjoy</p>
+
+      <div id="search-box">
+
+        <div id="search-bar">
+          <i class="fa-solid fa-magnifying-glass" id="search-icon"></i>
+          <input type="text" placeholder="Search for movies..." id="search-area">
+        </div>
+
+        <button id="search">search</button>
+
+      </div>
+
+      <p id="explore">Explore movies by title, actor, genre and more.</p>
+
+      <div id="break"></div>
+      
+  </main>
+
+  <script>
+
+      let searchBox = document.getElementById("search-area");
+      let clk = document.getElementById("search") 
+      
+      clk.addEventListener("click",()=>{
+        let moviename = searchBox.value.trim()
+        getMovie(moviename)
+      })
+
+      searchBox.addEventListener("keydown", (e) => {
+         if (e.key === "Enter") {
+            getMovie(searchBox.value.trim());
+          }
+       });
+      
+
+      async function getMovie(movieName){
+         let url = `http://www.omdbapi.com/?t=${movieName}&apikey=a6606658`
+
+         try{
+          let response = await fetch(url)
+          let data = await response.json()
+          console.log(data)
+          
+          if(data.Response != "True"){
+          alert("Enter The Correct Movie Name")
+}
+
+else{     
+   
+         document.getElementById("main-body").innerHTML =
+          `<header id="nav">
+          <h1  id="heading" onclick="window.location.href='movie.html'">🍿Movie<span style="color:red;">Search</span></h1>
+         </header>
+
+  <main id="hero-2">
+    <section id="sec-1" class="sections">
+      <img src="${data.Poster}" alt="N/A"  id="poster">
+      <div id="trailer">
+         <a href="https://www.youtube.com/results?search_query=${data.Title}+official+trailer" id="trailor-link">Watch Trailer</a>
+      </div>
+
+    </section>
+
+    <section id="sec-2" class="sections">
+      <div id="basic-1">  
+      <h1 id="title">${data.Title}</h1>
+      <p id="yrrr">${data.Year} &nbsp; <span style="border:1px solid white; border-radius:2px; padding:1px">${data.Rated}</span> &nbsp; ${data.Released} &nbsp; ${data.Runtime}</p>
+      <p id="genre">${data.Genre}</p>
+      </div>
+      <div id="basic-2">
+        <div class="basic-details">
+          <h3>Director</h3>
+          <p>${data.Director}</p>
+        </div>
+        <div class="basic-details">
+          <h3>Writer</h3>
+          <p>${data.Writer}</p>
+        </div>
+        <div class="basic-details">
+          <h3>Actors</h3>
+          <p>${data.Actors}</p>
+        </div>
+        <div class="basic-details">
+          <h3>Language</h3>
+          <p>${data.Language}</p>
+        </div>
+        <div class="basic-details">
+          <h3>Country</h3>
+          <p>${data.Country}</p>
+        </div>
+        <div class="basic-details">
+          <h3>Awards</h3>
+          <p>${data.Awards}</p>
+        </div>
+      </div>
+
+      <div id="plot">
+        <h3 id="plot-head">plot</h3>
+       ${data.Plot}
+      </div>
+    </section>
+
+    <section id="sec-3" class="sections">
+      <h3 style="font-weight:800;font-family: Arial, Helvetica, sans-serif;">Ratings</h3>
+      <div id="ratings">
+        <div class = "diff-ratings">
+          <h3>🌐${data.Ratings[0] ? data.Ratings[0].Source : "N/A"}</h3>
+          <p>${data.Ratings[0] ? data.Ratings[0].Value : "N/A"}</p>
+        </div>
+        <div class = "diff-ratings">
+          <h3>🍅${data.Ratings[1] ? data.Ratings[1].Source : "N/A"}</h3>
+          <p>${data.Ratings[1] ? data.Ratings[1].Value : "N/A"}</p>
+        </div>
+        <div class = "diff-ratings">
+          <h3>🎬${data.Ratings[2] ? data.Ratings[2].Source : "N/A"}</h3>
+          <p>${data.Ratings[2] ? data.Ratings[2].Value : "N/A"}</p>
+        </div>
+        
+      </div>
+
+      <div id="extra-data">
+       <div class = "external">
+          <h3>Box office</h3>
+          <p>${data.BoxOffice}</p>
+        </div>
+        <div class = "external">
+          <h3>Type</h3>
+          <p>${data.Type}</p>
+        </div>
+        <div class = "external">
+          <h3>DVD</h3>
+          <p>${data.DVD}</p>
+        </div>
+        <div class = "external">
+          <h3>Production</h3>
+          <p>${data.Production}</p>
+        </div>
+        <div class = "external">
+          <h3>Website</h3>
+          <p>${data.Website}</p>
+        </div>
+        <div class = "external">
+          <h3>IMDb ID</h3>
+          <p>${data.imdbID}</p>
+        </div>
+
+      </div>
+    </section>
+
+    </div>
+  </main>`;
+        
+        }
+        
+   
+
+
+         }
+         catch(error){
+          console.log("error detected",error)
+         }
+      }
+
+
+
+  </script>
+</body>
+</html>
